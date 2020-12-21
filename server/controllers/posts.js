@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import PostMessage from '../models/postMessage.js';
 
 export const getPosts = async (req, res) => {
@@ -12,24 +11,31 @@ export const getPosts = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  const post = req.body;
-
-  const newPost = new PostMessage(post);
   try {
-    await newPost.save();
+    const post = new PostMessage(req.body);
+    post.creator = req.user;
 
-    res.status(201).json(newPost);
+    await post.save();
+
+    res.status(201).json(post);
   } catch (err) {
-    res.status(409).json({ message: error.message });
+    res.status(409).json({ msg: err.message });
   }
 };
 
 export const updatePost = async (req, res) => {
+  const postToUpdate = await PostMessage.findOne({
+    creator: req.user,
+    _id: req.params.id,
+  });
+
+  if (!postToUpdate)
+    return res
+      .status(400)
+      .json({ msg: 'No post found with this ID that belongs to the current user!' });
+
   const { id: _id } = req.params;
   const post = req.body;
-
-  if (!mongoose.Types.ObjectId.isValid(_id))
-    return res.status(404).send('No post found with that id :(');
 
   const updatedPost = await PostMessage.findByIdAndUpdate(
     _id,
@@ -41,28 +47,44 @@ export const updatePost = async (req, res) => {
 };
 
 export const deletePost = async (req, res) => {
-  const { id } = req.params;
+  const post = await PostMessage.findOne({ creator: req.user, _id: req.params.id });
 
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send('No post found with that id :(');
+  if (!post)
+    return res
+      .status(400)
+      .json({ msg: 'No post found with this ID that belongs to the current user!' });
 
-  await PostMessage.findByIdAndRemove(id);
+  await PostMessage.findByIdAndRemove(req.params.id);
 
   res.json({ message: 'Post deleted successfully!' });
 };
 
 export const likePost = async (req, res) => {
   const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send('No post found with that id :(');
+  const user = req.user;
 
   const post = await PostMessage.findById(id);
-  const updatedPost = await PostMessage.findByIdAndUpdate(
-    id,
-    { likeCount: post.likeCount + 1 },
-    { new: true },
-  );
+
+  if (!post) return res.status(404).json({ msg: 'Post not found D:' });
+
+  let updatedPost;
+
+  if (!post.likes.includes(user)) {
+    updatedPost = await PostMessage.findByIdAndUpdate(
+      id,
+      { likeCount: post.likeCount + 1, likes: [...post.likes, user] },
+      { new: true },
+    );
+  } else {
+    updatedPost = await PostMessage.findByIdAndUpdate(
+      id,
+      {
+        likeCount: post.likeCount - 1,
+        likes: post.likes.filter((user) => user !== user),
+      },
+      { new: true },
+    );
+  }
 
   res.json(updatedPost);
 };

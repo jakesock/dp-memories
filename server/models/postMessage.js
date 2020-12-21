@@ -2,9 +2,19 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const postSchema = Schema({
-  title: String,
-  message: String,
-  creator: String,
+  title: {
+    type: String,
+    required: true,
+  },
+  message: {
+    type: String,
+    required: true,
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   tags: [
     {
       type: String,
@@ -16,6 +26,12 @@ const postSchema = Schema({
     type: Number,
     default: 0,
   },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   createdAt: {
     type: Date,
     default: new Date(),
