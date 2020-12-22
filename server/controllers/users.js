@@ -62,6 +62,11 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const getUserData = async (req, res) => {
+  const user = await User.findById(req.user).select('-password');
+  res.json(user);
+};
+
 export const tokenIsValid = async (req, res) => {
   try {
     const token = req.header('x-auth-token');
