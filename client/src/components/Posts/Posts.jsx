@@ -6,20 +6,30 @@ import Post from './Post/Post';
 
 import useStyles from './styles';
 
-const Posts = ({ setCurrentId }) => {
+const Posts = ({ setCurrentPostId }) => {
   const posts = useSelector((state) => {
-    return state.posts;
+    return state.posts.posts;
+  });
+  const postsLoading = useSelector((state) => {
+    return state.posts.loading;
+  });
+  const currentUser = useSelector((state) => {
+    return state.auth.user;
   });
 
   const classes = useStyles();
 
-  return !posts.length ? (
+  return postsLoading ? (
     <CircularProgress />
   ) : (
     <Grid className={classes.container} container alignItems="stretch" spacing={3}>
       {posts.map((post) => (
         <Grid key={post._id} item sm={12} md={6}>
-          <Post post={post} setCurrentId={setCurrentId} />
+          <Post
+            post={post}
+            setCurrentPostId={setCurrentPostId}
+            currentUser={currentUser}
+          />
         </Grid>
       ))}
     </Grid>

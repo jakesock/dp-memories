@@ -5,8 +5,25 @@
 - This is an app for my friends!
 - I wanted to practice the social media aspect of an application I am working on using the MERN stack with Redux, so this is that practice!
 
-## Issues
+## TODO
 
-- There are a lot of issues with this, but as it is a project made to practice for an upcoming project, I won't be adding much or fixing it frequently.
-- There is no use authentication in place, so every time someone posts they have to enter their name.
-- The lack of authentication also means that a user can like, edit, and delete anyones post as many times as they want. Authentication is something I want more practice with, so I hope to implement some authentication flow with this soon!
+- [ ] Update AppNavBar completely
+- [ ] Fix Logout button and username placements
+- [ ] Add "Comma-seperated" message and example subtitle for tag portion of PostForm
+- [ ] Add "Liked" vs "Not Liked" styles for like button
+- [ ] Make FormError component for form errors
+- [ ] Display FormError component on forms
+- [ ] Make Snackbar component for general messages
+- [ ] Place Snackbar component and pass several error, success, and info props for general alerting where needed
+- [ ] Fix layout on super small screens
+- [ ] Clear error state in various portions of the application, no need to have past errors hanging around in the store
+- [ ] Style the "Already have an account?" and "Don't have an account?" messages on the Auth Forms
+- [ ] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, reduce unnecessary component-level state if applicable, etc.)
+- [ ] Build and deploy v2
+
+### TODO (FUTURE)
+
+- [ ] Add filter posts by tag on tag click
+- [ ] Add filter posts by user on username click
+- [ ] Make tags space-seperated, displaying them as removable chips after space
+- [ ] Comments?

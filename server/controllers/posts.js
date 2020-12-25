@@ -2,89 +2,118 @@ import PostMessage from '../models/postMessage.js';
 
 export const getPosts = async (req, res) => {
   try {
-    const postMessages = await PostMessage.find();
+    const postMessages = await PostMessage.find()
+      .populate('creator', '-password')
+      .sort({ createdAt: -1 });
 
     res.status(200).json(postMessages);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const createPost = async (req, res) => {
   try {
+    const { title, message } = req.body;
+    if (!title || !message)
+      return res.status(400).json({ msg: 'Title and message cannot be empty!' });
+
     const post = new PostMessage(req.body);
-    post.creator = req.user;
+    post.creator = req.user.id;
 
-    await post.save();
+    const savedPost = await post.save();
 
-    res.status(201).json(post);
+    const response = await PostMessage.populate(savedPost, {
+      path: 'creator',
+      model: 'User',
+      select: '-password',
+    });
+
+    res.status(201).json(response);
   } catch (err) {
-    res.status(409).json({ msg: err.message });
+    res.status(500).json({ msg: err.message });
   }
 };
 
 export const updatePost = async (req, res) => {
-  const postToUpdate = await PostMessage.findOne({
-    creator: req.user,
-    _id: req.params.id,
-  });
+  try {
+    const postToUpdate = await PostMessage.findOne({
+      creator: req.user.id,
+      _id: req.params.id,
+    });
 
-  if (!postToUpdate)
-    return res
-      .status(400)
-      .json({ msg: 'No post found with this ID that belongs to the current user!' });
+    if (!postToUpdate)
+      return res.status(400).json({
+        msg: 'No post found with this ID that belongs to the current user!',
+      });
 
-  const { id: _id } = req.params;
-  const post = req.body;
+    const { id: _id } = req.params;
+    const post = req.body;
 
-  const updatedPost = await PostMessage.findByIdAndUpdate(
-    _id,
-    { ...post, _id },
-    { new: true },
-  );
+    const updatedPost = await PostMessage.findByIdAndUpdate(
+      _id,
+      { ...post, _id },
+      { new: true },
+    ).populate('creator', '-password');
 
-  res.json(updatedPost);
+    res.json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export const deletePost = async (req, res) => {
-  const post = await PostMessage.findOne({ creator: req.user, _id: req.params.id });
+  try {
+    const post = await PostMessage.findOne({
+      creator: req.user.id,
+      _id: req.params.id,
+    });
 
-  if (!post)
-    return res
-      .status(400)
-      .json({ msg: 'No post found with this ID that belongs to the current user!' });
+    if (!post)
+      return res.status(400).json({
+        msg: 'No post found with this ID that belongs to the current user!',
+      });
 
-  await PostMessage.findByIdAndRemove(req.params.id);
+    await PostMessage.findByIdAndRemove(req.params.id);
 
-  res.json({ message: 'Post deleted successfully!' });
+    res.json({ message: 'Post deleted successfully!' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export const likePost = async (req, res) => {
-  const { id } = req.params;
-  const user = req.user;
+  try {
+    const { id } = req.params;
+    const currentUserId = req.user.id;
 
-  const post = await PostMessage.findById(id);
+    const post = await PostMessage.findById(id);
 
-  if (!post) return res.status(404).json({ msg: 'Post not found D:' });
+    if (!post) return res.status(404).json({ msg: 'Post not found D:' });
 
-  let updatedPost;
+    let updatedPost;
 
-  if (!post.likes.includes(user)) {
-    updatedPost = await PostMessage.findByIdAndUpdate(
-      id,
-      { likeCount: post.likeCount + 1, likes: [...post.likes, user] },
-      { new: true },
-    );
-  } else {
-    updatedPost = await PostMessage.findByIdAndUpdate(
-      id,
-      {
-        likeCount: post.likeCount - 1,
-        likes: post.likes.filter((user) => user !== user),
-      },
-      { new: true },
-    );
+    if (!post.likes.includes(currentUserId)) {
+      updatedPost = await PostMessage.findByIdAndUpdate(
+        id,
+        { likeCount: post.likeCount + 1, likes: [...post.likes, currentUserId] },
+        { new: true },
+      ).populate('creator', '-password');
+    } else {
+      updatedPost = await PostMessage.findByIdAndUpdate(
+        id,
+        {
+          likeCount: post.likeCount - 1,
+          likes: post.likes.filter(
+            (user) => currentUserId.toString() !== user.toString(),
+          ),
+        },
+        { new: true },
+      ).populate('creator', '-password');
+    }
+
+    res.json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  res.json(updatedPost);
 };

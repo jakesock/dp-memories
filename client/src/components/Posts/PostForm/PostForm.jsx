@@ -3,25 +3,58 @@ import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 
-import { createPost, updatePost } from '../../actions/posts';
+import { createPost, updatePost } from '../../../actions/posts';
+import { clearErrors } from '../../../actions/error';
+import { logout } from '../../../actions/auth';
 
+import usePrevious from '../../../hooks/usePrevious';
 import useStyles from './styles';
 
-const Form = ({ currentId, setCurrentId }) => {
+const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   const [postData, setPostData] = useState({
-    creator: '',
     title: '',
     message: '',
     tags: '',
     selectedFile: '',
   });
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const user = useSelector((state) => {
+    return state.auth.user;
+  });
+  const isAuthenticated = useSelector((state) => {
+    return state.auth.isAuthenticated;
+  });
 
   const post = useSelector((state) => {
-    return currentId ? state.posts.find((post) => post._id === currentId) : null;
+    return currentPostId
+      ? state.posts.posts.find((post) => post._id === currentPostId)
+      : null;
   });
+
+  const error = useSelector((state) => {
+    return state.error;
+  });
+  const prevError = usePrevious(error);
 
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error !== prevError) {
+      if (error.id === 'CREATE_POST_FAIL' || error.id === 'UPDATE_POST_FAIL') {
+        setErrorMsg(error.msg.msg);
+      } else {
+        setErrorMsg(null);
+      }
+    }
+  }, [error, prevError]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setForm('login');
+    }
+  });
 
   useEffect(() => {
     if (post) setPostData(post);
@@ -29,23 +62,33 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (currentId) {
-      dispatch(updatePost(currentId, postData));
+    if (isAuthenticated) {
+      if (currentPostId) {
+        dispatch(updatePost(currentPostId, postData));
+      } else {
+        dispatch(createPost(postData));
+      }
+      clearErrors();
+      clear();
     } else {
-      dispatch(createPost(postData));
+      setForm('login');
     }
+  };
 
-    clear();
+  const onChange = (e) => {
+    setPostData({ ...postData, [e.target.name]: e.target.value });
   };
 
   const clear = () => {
-    setCurrentId(null);
-    setPostData({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
+    clearErrors();
+    setCurrentPostId(null);
+    setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
 
   return (
     <Paper className={classes.paper}>
+      <Typography variant="h5">{user.username}</Typography>
+
       <form
         autoComplete="off"
         noValidate
@@ -53,23 +96,16 @@ const Form = ({ currentId, setCurrentId }) => {
         onSubmit={handleSubmit}
       >
         <Typography variant="h6">
-          {currentId ? 'Updating' : 'Creating'} a Memory
+          {currentPostId ? 'Updating' : 'Creating'} a Memory
         </Typography>
-        <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
-        />
+        <Typography variant="h6">{errorMsg}</Typography>
         <TextField
           name="title"
           variant="outlined"
           label="Title"
           fullWidth
           value={postData.title}
-          onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          onChange={onChange}
         />
         <TextField
           name="message"
@@ -77,7 +113,7 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Message"
           fullWidth
           value={postData.message}
-          onChange={(e) => setPostData({ ...postData, message: e.target.value })}
+          onChange={onChange}
         />
         <TextField
           name="tags"
@@ -126,4 +162,4 @@ const Form = ({ currentId, setCurrentId }) => {
   );
 };
 
-export default Form;
+export default PostForm;

@@ -15,12 +15,7 @@ app.use(bodyParser.json({ limit: '30mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
-app.use('/users', userRoutes);
-app.use('/posts', postRoutes);
-
 const DB_URL = process.env.HOST || 'mongodb://localhost:27017/memories';
-const PORT = process.env.PORT || 8080;
-
 mongoose
   .connect(DB_URL, {
     useNewUrlParser: true,
@@ -28,9 +23,12 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => console.log('🌍 Connected to DB!'))
-  .then(() =>
-    app.listen(PORT, () => {
-      console.log(`🚀 Listening on port ${PORT}!`);
-    }),
-  )
   .catch((err) => console.log('❌ DB CONNECTION ERROR: ', err.message));
+
+app.use('/users', userRoutes);
+app.use('/posts', postRoutes);
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`🚀 Listening on port ${PORT}!`);
+});

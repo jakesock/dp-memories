@@ -14,7 +14,6 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ msg: 'Passwords do not match!' });
 
     const existingUsername = await User.findOne({ username });
-
     if (existingUsername) return res.status(400).json({ msg: 'Username is taken!' });
 
     const salt = await bcrypt.genSalt();
@@ -25,8 +24,18 @@ export const registerUser = async (req, res) => {
       password: passwordHash,
     });
 
-    const savedUser = await newUser.save();
-    res.json(savedUser);
+    const user = await newUser.save();
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 24 * 2,
+    });
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -38,18 +47,20 @@ export const loginUser = async (req, res) => {
 
     // Validate
     if (!username || !password)
-      return res.status(400).json({ msg: 'Not all fields have been entered' });
+      return res.status(400).json({ msg: 'Not all fields have been entered!' });
 
     const user = await User.findOne({ username: username });
-
     if (!user) {
       return res.status(400).json({ msg: 'No account with this username exists!' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Invalid password!' });
+    const passwordIsMatch = await bcrypt.compare(password, user.password);
+    if (!passwordIsMatch) return res.status(400).json({ msg: 'Invalid password!' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 24 * 2,
+    });
+
     res.json({
       token,
       user: {
@@ -63,22 +74,10 @@ export const loginUser = async (req, res) => {
 };
 
 export const getUserData = async (req, res) => {
-  const user = await User.findById(req.user).select('-password');
-  res.json(user);
-};
-
-export const tokenIsValid = async (req, res) => {
   try {
-    const token = req.header('x-auth-token');
-    if (!token) return res.json(false);
-
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    if (!verified) return res.json(false);
-
-    const user = await User.findById(verified.id);
-    if (!user) return res.json(false);
-
-    return res.json(true);
+    const { id } = req.user;
+    const user = await User.findById(id).select('-password');
+    res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
