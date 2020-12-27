@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 
+import FormFooter from './FormFooter';
+
 import { register } from '../../actions/auth';
 import { clearErrors } from '../../actions/error';
 
@@ -19,11 +21,10 @@ const RegisterForm = ({ setForm }) => {
   const error = useSelector((state) => {
     return state.error;
   });
-
   const prevError = usePrevious(error);
 
-  const classes = useStyles();
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   useEffect(() => {
     if (error !== prevError) {
@@ -105,12 +106,7 @@ const RegisterForm = ({ setForm }) => {
           Register
         </Button>
       </form>
-      <span>
-        Already have an account?{' '}
-        <button type="button" onClick={changeForm}>
-          Login
-        </button>
-      </span>
+      <FormFooter type="register" changeForm={changeForm} />
     </Paper>
   );
 };

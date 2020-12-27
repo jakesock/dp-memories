@@ -15,6 +15,7 @@ export const getPosts = async (req, res) => {
 export const createPost = async (req, res) => {
   try {
     const { title, message } = req.body;
+
     if (!title || !message)
       return res.status(400).json({ msg: 'Title and message cannot be empty!' });
 

@@ -5,7 +5,6 @@ import { TextField, Button, Typography, Paper } from '@material-ui/core';
 
 import { createPost, updatePost } from '../../../actions/posts';
 import { clearErrors } from '../../../actions/error';
-import { logout } from '../../../actions/auth';
 
 import usePrevious from '../../../hooks/usePrevious';
 import useStyles from './styles';
@@ -37,8 +36,8 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   });
   const prevError = usePrevious(error);
 
-  const classes = useStyles();
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   useEffect(() => {
     if (error !== prevError) {
@@ -128,6 +127,9 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
             })
           }
         />
+        <Typography variant="caption" color="textSecondary" align="center">
+          Comma-seperated (i.e. thanksgiving, gobblegobble)
+        </Typography>
         <div className={classes.fileInput}>
           <FileBase
             type="file"

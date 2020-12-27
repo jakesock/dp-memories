@@ -15,6 +15,8 @@ export default makeStyles((theme) => ({
     justifyContent: 'center',
   },
   fileInput: {
+    display: 'flex',
+    justifyContent: 'center',
     width: '97%',
     margin: '10px 0',
   },

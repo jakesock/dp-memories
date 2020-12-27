@@ -7,7 +7,6 @@ export const registerUser = async (req, res) => {
   try {
     const { username, password, passwordCheck } = req.body;
 
-    // Validate
     if (!username || !password || !passwordCheck)
       return res.status(400).json({ msg: 'Not all fields have been entered!' });
     if (password !== passwordCheck)
@@ -45,7 +44,6 @@ export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validate
     if (!username || !password)
       return res.status(400).json({ msg: 'Not all fields have been entered!' });
 
@@ -77,6 +75,7 @@ export const getUserData = async (req, res) => {
   try {
     const { id } = req.user;
     const user = await User.findById(id).select('-password');
+
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });

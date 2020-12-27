@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import {
   Card,
   CardActions,
@@ -9,18 +10,40 @@ import {
   Typography,
 } from '@material-ui/core';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import moment from 'moment';
+
+import { deletePost, likePost } from '../../../actions/posts';
+import { setSnackbar } from '../../../actions/snackbar';
 
 import PostDropdown from './PostDropdown';
 
-import { deletePost, likePost } from '../../../actions/posts';
 import useStyles from './styles';
 
 const Post = ({ post, setCurrentPostId, currentUser }) => {
-  const classes = useStyles();
+  const [isLiked, setIsLiked] = useState(null);
+
   const dispatch = useDispatch();
+  const classes = useStyles();
+
+  const isAuthenticated = useSelector((state) => {
+    return state.auth.isAuthenticated;
+  });
+
+  const handleLike = () => {
+    if (isAuthenticated) {
+      dispatch(likePost(post._id));
+    } else {
+      dispatch(setSnackbar(true, 'info', 'Please login or register to like posts!'));
+    }
+  };
+
+  useEffect(() => {
+    const checkIfLiked = () => {
+      const postIsLiked = post.likes.includes(currentUser._id);
+      postIsLiked ? setIsLiked(true) : setIsLiked(false);
+    };
+
+    checkIfLiked();
+  });
 
   const handleEdit = () => {
     setCurrentPostId(post._id);
@@ -65,14 +88,23 @@ const Post = ({ post, setCurrentPostId, currentUser }) => {
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => dispatch(likePost(post._id))}
-        >
-          <ThumbUpAltIcon fontSize="small" />
-          &nbsp;Like&nbsp;{post.likeCount}
-        </Button>
+        {isLiked ? (
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={handleLike}
+            disableElevation
+          >
+            <ThumbUpAltIcon fontSize="small" />
+            &nbsp;Liked&nbsp;{post.likeCount}
+          </Button>
+        ) : (
+          <Button size="small" color="primary" onClick={handleLike}>
+            <ThumbUpAltIcon fontSize="small" />
+            &nbsp;Like&nbsp;{post.likeCount}
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
