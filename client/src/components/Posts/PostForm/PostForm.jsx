@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 
+import FormHeader from '../../FormHeader/FormHeader';
+import UserInfo from '../../auth/UserInfo';
+
 import { createPost, updatePost } from '../../../actions/posts';
 import { clearErrors } from '../../../actions/error';
 
@@ -67,7 +70,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
       } else {
         dispatch(createPost(postData));
       }
-      clearErrors();
+      dispatch(clearErrors());
       clear();
     } else {
       setForm('login');
@@ -79,25 +82,24 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   };
 
   const clear = () => {
-    clearErrors();
+    dispatch(clearErrors());
     setCurrentPostId(null);
     setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
 
   return (
     <Paper className={classes.paper}>
-      <Typography variant="h5">{user.username}</Typography>
-
       <form
         autoComplete="off"
         noValidate
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">
-          {currentPostId ? 'Updating' : 'Creating'} a Memory
-        </Typography>
-        <Typography variant="h6">{errorMsg}</Typography>
+        <FormHeader
+          title={currentPostId ? 'Updating a Memory' : 'Creating a Memory'}
+          errorMsg={errorMsg}
+        />
+        {isAuthenticated ? <UserInfo username={user.username} /> : null}
         <TextField
           name="title"
           variant="outlined"

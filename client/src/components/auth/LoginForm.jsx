@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Typography, Paper } from '@material-ui/core';
+import { TextField, Button, Paper } from '@material-ui/core';
 
 import FormFooter from './FormFooter';
+import FormHeader from '../FormHeader/FormHeader';
 
 import { login } from '../../actions/auth';
 import { clearErrors } from '../../actions/error';
@@ -65,8 +66,7 @@ const LoginForm = ({ setForm }) => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Login</Typography>
-        <Typography variant="h6">{errorMsg}</Typography>
+        <FormHeader title="Login" errorMsg={errorMsg} />
         <TextField
           name="username"
           variant="outlined"

@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Container,
-  AppBar,
-  Typography,
-  Grow,
-  Grid,
-  Button,
-} from '@material-ui/core';
+import { Container, AppBar, Typography, Grow, Grid } from '@material-ui/core';
 
-import { loadUser, logout } from './actions/auth';
+import { loadUser } from './actions/auth';
 import { getPosts } from './actions/posts';
 
 import LoginForm from './components/auth/LoginForm';
@@ -17,6 +10,7 @@ import RegisterForm from './components/auth/RegisterForm';
 import PostForm from './components/Posts/PostForm/PostForm';
 import Posts from './components/Posts/Posts';
 import Snackbar from './components/Snackbar/Snackbar';
+import BackToTop from './components/BackToTop/BackToTop';
 
 import memories from './images/memories.png';
 import useStyles from './styles';
@@ -56,10 +50,6 @@ const App = () => {
     }
   };
 
-  const handleOnLogoutClick = () => {
-    dispatch(logout());
-  };
-
   return (
     <Container maxwidth="lg">
       <Snackbar />
@@ -69,18 +59,6 @@ const App = () => {
           Memories
         </Typography>
         <img className={classes.image} src={memories} alt="memories" height="60" />
-        {isAuthenticated ? (
-          <Button
-            className={classes.buttonSubmit}
-            variant="contained"
-            color="primary"
-            size="small"
-            type="button"
-            onClick={handleOnLogoutClick}
-          >
-            Logout
-          </Button>
-        ) : null}
       </AppBar>
 
       <Grow in>
@@ -92,11 +70,12 @@ const App = () => {
             alignItems="stretch"
             spacing={3}
           >
-            <Grid item sm={12} md={7}>
+            <Grid item xs={12} sm={12} md={7}>
               <Posts setCurrentPostId={setCurrentPostId} />
             </Grid>
-            <Grid item sm={12} md={4}>
+            <Grid item xs={12} sm={12} md={4}>
               {formToRender()}
+              <BackToTop showBelow={250} />
             </Grid>
           </Grid>
         </Container>

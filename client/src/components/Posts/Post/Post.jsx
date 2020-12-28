@@ -38,8 +38,12 @@ const Post = ({ post, setCurrentPostId, currentUser }) => {
 
   useEffect(() => {
     const checkIfLiked = () => {
-      const postIsLiked = post.likes.includes(currentUser._id);
-      postIsLiked ? setIsLiked(true) : setIsLiked(false);
+      if (isAuthenticated) {
+        const postIsLiked = post.likes.includes(currentUser._id);
+        postIsLiked ? setIsLiked(true) : setIsLiked(false);
+      } else {
+        setIsLiked(false);
+      }
     };
 
     checkIfLiked();

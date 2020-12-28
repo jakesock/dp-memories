@@ -33,4 +33,15 @@ export default makeStyles((theme) => ({
       textDecoration: 'underline',
     },
   },
+  userInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: theme.spacing(1),
+    marginBottom: 0,
+    padding: theme.spacing(0),
+  },
+  buttonLogout: {
+    textTransform: 'none',
+  },
 }));
