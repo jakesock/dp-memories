@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, AppBar, Typography, Grow, Grid } from '@material-ui/core';
+import { Container, Grow, Grid } from '@material-ui/core';
 
-import { loadUser } from './actions/auth';
-import { getPosts } from './actions/posts';
+import { loadUser } from '../actions/auth';
+import { getPosts } from '../actions/posts';
 
-import LoginForm from './components/auth/LoginForm';
-import RegisterForm from './components/auth/RegisterForm';
-import PostForm from './components/Posts/PostForm/PostForm';
-import Posts from './components/Posts/Posts';
-import Snackbar from './components/Snackbar/Snackbar';
-import BackToTop from './components/BackToTop/BackToTop';
+import LoginForm from './auth/LoginForm';
+import RegisterForm from './auth/RegisterForm';
+import PostForm from './Posts/PostForm/PostForm';
+import Posts from './Posts/Posts';
+import Snackbar from './layout/Snackbar/Snackbar';
+import BackToTop from './layout/BackToTop/BackToTop';
+import AppBar from './layout/AppBar/AppBar';
 
-import memories from './images/memories.png';
 import useStyles from './styles';
 
 const App = () => {
@@ -52,15 +52,9 @@ const App = () => {
 
   return (
     <Container maxwidth="lg">
+      <AppBar />
       <Snackbar />
-
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <Typography className={classes.heading} variant="h2" align="center">
-          Memories
-        </Typography>
-        <img className={classes.image} src={memories} alt="memories" height="60" />
-      </AppBar>
-
+      <BackToTop showBelow={250} />
       <Grow in>
         <Container>
           <Grid
@@ -75,7 +69,6 @@ const App = () => {
             </Grid>
             <Grid item xs={12} sm={12} md={4}>
               {formToRender()}
-              <BackToTop showBelow={250} />
             </Grid>
           </Grid>
         </Container>

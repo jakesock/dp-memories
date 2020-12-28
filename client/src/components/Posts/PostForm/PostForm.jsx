@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
-import { TextField, Button, Typography, Paper } from '@material-ui/core';
+import { Button, Typography, Paper } from '@material-ui/core';
 
-import FormHeader from '../../FormHeader/FormHeader';
+import FormHeader from '../../layout/FormHeader/FormHeader';
 import UserInfo from '../../auth/UserInfo';
+import FormInput from '../../auth/layout/FormInput';
 
 import { createPost, updatePost } from '../../../actions/posts';
 import { clearErrors } from '../../../actions/error';
@@ -100,28 +101,28 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
           errorMsg={errorMsg}
         />
         {isAuthenticated ? <UserInfo username={user.username} /> : null}
-        <TextField
-          name="title"
-          variant="outlined"
+        <FormInput
           label="Title"
-          fullWidth
-          value={postData.title}
+          name="title"
+          id="title"
+          inputType="text"
+          formData={postData}
           onChange={onChange}
         />
-        <TextField
-          name="message"
-          variant="outlined"
+        <FormInput
           label="Message"
-          fullWidth
-          value={postData.message}
+          name="message"
+          id="message"
+          inputType="text"
+          formData={postData}
           onChange={onChange}
         />
-        <TextField
-          name="tags"
-          variant="outlined"
+        <FormInput
           label="Tags"
-          fullWidth
-          value={postData.tags}
+          name="tags"
+          id="tags"
+          inputType="text"
+          formData={postData}
           onChange={(e) =>
             setPostData({
               ...postData,

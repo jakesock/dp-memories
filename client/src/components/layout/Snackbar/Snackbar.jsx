@@ -4,7 +4,7 @@ import { Snackbar, IconButton, Slide } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { setSnackbar } from '../../actions/snackbar';
+import { setSnackbar } from '../../../actions/snackbar';
 
 import useStyles from './styles';
 

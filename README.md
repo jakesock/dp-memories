@@ -30,7 +30,6 @@
 
 - [x] Fix layout on extra small screens
 - [ ] Update AppBar completely (custom image)
-- [ ] If text, Fix AppBar Text on extra small screens
 
 #### General Feedback
 
@@ -41,7 +40,6 @@
 
 - [x] Add 'Back To Top' button + functionality
 - [ ] Implement infinite scroll
-- [ ] Clear error state in various portions of the application, no need to have past errors hanging around in the store (still unsure about my approach to this)
 
 #### Forms
 
@@ -50,14 +48,14 @@
 - [x] Add "Comma-seperated" message and example subtitle for tag portion of PostForm
 - [x] Make FormError component for form errors
 - [x] Display FormError component on forms
-- [ ] Make form sticky on > medium sized screens
 - [ ] Add show/hide password functionality on auth forms
+- [ ] Make form sticky on > medium sized screens
 - [ ] Change image upload to a cloud service and style upload input
 
 #### Posts
 
 - [x] Add "Liked" vs "Not Liked" styles for like button
-- [ ] Add Edit and Delete icons to PostDropdown options
+- [x] Add Edit and Delete icons to PostDropdown options
 - [ ] Fix style for longer post messages or limit input character count (Future update planned will add functionality for longer posts (and possibly comments))
 
 #### General Clean Up & Deploy

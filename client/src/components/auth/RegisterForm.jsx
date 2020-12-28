@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Paper } from '@material-ui/core';
+import { Button, Paper } from '@material-ui/core';
 
-import FormFooter from './FormFooter';
-import FormHeader from '../FormHeader/FormHeader';
+import FormFooter from '../layout/FormFooter/FormFooter';
+import FormHeader from '../layout/FormHeader/FormHeader';
+import FormInput from './layout/FormInput';
 
 import { register } from '../../actions/auth';
 import { clearErrors } from '../../actions/error';
@@ -69,30 +70,28 @@ const RegisterForm = ({ setForm }) => {
         onSubmit={handleSubmit}
       >
         <FormHeader title="Register" errorMsg={errorMsg} />
-        <TextField
-          name="username"
-          variant="outlined"
+        <FormInput
           label="Username"
-          fullWidth
-          value={formData.username}
+          name="username"
+          id="username"
+          inputType="text"
+          formData={formData}
           onChange={onChange}
         />
-        <TextField
-          name="password"
-          type="password"
-          variant="outlined"
+        <FormInput
           label="Password"
-          fullWidth
-          value={formData.password}
+          name="password"
+          id="password"
+          inputType="password"
+          formData={formData}
           onChange={onChange}
         />
-        <TextField
-          name="passwordCheck"
-          type="password"
-          variant="outlined"
+        <FormInput
           label="Confirm Password"
-          fullWidth
-          value={formData.passwordCheck}
+          name="passwordCheck"
+          id="passwordCheck"
+          inputType="password"
+          formData={formData}
           onChange={onChange}
         />
         <Button
