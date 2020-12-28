@@ -62,7 +62,7 @@ const RegisterForm = ({ setForm }) => {
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={`${classes.paper} ${classes.stickyForm}`}>
       <form
         autoComplete="off"
         noValidate

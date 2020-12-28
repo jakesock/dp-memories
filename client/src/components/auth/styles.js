@@ -28,4 +28,10 @@ export default makeStyles((theme) => ({
   buttonLogout: {
     textTransform: 'none',
   },
+  [theme.breakpoints.up('md')]: {
+    stickyForm: {
+      position: 'sticky',
+      top: 24,
+    },
+  },
 }));

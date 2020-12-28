@@ -23,4 +23,10 @@ export default makeStyles((theme) => ({
   buttonSubmit: {
     marginBottom: 10,
   },
+  [theme.breakpoints.up('md')]: {
+    stickyForm: {
+      position: 'sticky',
+      top: 24,
+    },
+  },
 }));

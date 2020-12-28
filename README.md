@@ -48,8 +48,8 @@
 - [x] Add "Comma-seperated" message and example subtitle for tag portion of PostForm
 - [x] Make FormError component for form errors
 - [x] Display FormError component on forms
-- [ ] Add show/hide password functionality on auth forms
-- [ ] Make form sticky on > medium sized screens
+- [x] Add show/hide password functionality on auth forms
+- [x] Make form sticky on > medium sized screens
 - [ ] Change image upload to a cloud service and style upload input
 
 #### Posts
