@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Paper } from '@material-ui/core';
 
-import FormFooter from '../layout/FormFooter/FormFooter';
-import FormHeader from '../layout/FormHeader/FormHeader';
+import FormFooter from './layout/FormFooter/FormFooter';
+import FormHeader from './layout/FormHeader/FormHeader';
 import FormInput from './layout/FormInput';
 
 import { register } from '../../actions/auth';

@@ -29,7 +29,7 @@
 #### General Layout/Styling
 
 - [x] Fix layout on extra small screens
-- [ ] Update AppBar completely (custom image)
+- [ ] Update AppBar
 
 #### General Feedback
 
@@ -39,7 +39,7 @@
 #### General Functionality
 
 - [x] Add 'Back To Top' button + functionality
-- [ ] Implement infinite scroll
+- [ ] Add loaders for asynchronous post actions
 
 #### Forms
 
@@ -50,7 +50,10 @@
 - [x] Display FormError component on forms
 - [x] Add show/hide password functionality on auth forms
 - [x] Make form sticky on > medium sized screens
-- [ ] Change image upload to a cloud service and style upload input
+- [x] Change image upload to a cloud service
+- [ ] Style file input
+- [ ] Add remove button on image preview
+- [ ] Find a way to delete images when user changes image while editing
 
 #### Posts
 
@@ -61,11 +64,12 @@
 #### General Clean Up & Deploy
 
 - [ ] Check various things on mobile and fix if need be
-- [ ] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, reduce unnecessary component-level state if applicable, etc.)
+- [ ] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, etc.)
 - [ ] Build and deploy v2
 
 ## TODO (FUTURE)
 
+- [ ] Implement infinite scroll
 - [ ] Add filter posts by tag on tag click
 - [ ] Add filter posts by user on username click
 - [ ] Make tags space-seperated, displaying them as removable chips after space

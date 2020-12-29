@@ -1,4 +1,5 @@
 import PostMessage from '../models/postMessage.js';
+import cloudinary from '../utils/cloudinary.js';
 
 export const getPosts = async (req, res) => {
   try {
@@ -14,12 +15,24 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
-    const { title, message } = req.body;
+    const { title, message, tags, selectedFile } = req.body;
 
     if (!title || !message)
       return res.status(400).json({ msg: 'Title and message cannot be empty!' });
 
-    const post = new PostMessage(req.body);
+    const imageRes = await cloudinary.v2.uploader.upload(selectedFile, {
+      upload_preset: 'dp_memories',
+    });
+
+    const post = new PostMessage({
+      title,
+      message,
+      tags,
+      selectedFile: {
+        cloudId: imageRes.public_id,
+        url: imageRes.url,
+      },
+    });
     post.creator = req.user.id;
 
     const savedPost = await post.save();
@@ -76,6 +89,7 @@ export const deletePost = async (req, res) => {
       });
 
     await PostMessage.findByIdAndRemove(req.params.id);
+    await cloudinary.v2.uploader.destroy(post.selectedFile.cloudId);
 
     res.json({ message: 'Post deleted successfully!' });
   } catch (err) {

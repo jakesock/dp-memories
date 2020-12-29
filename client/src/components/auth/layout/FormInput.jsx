@@ -38,6 +38,8 @@ const FormInput = ({ label, name, id, inputType, formData, onChange, required })
             fullWidth
           />
         );
+      case 'file':
+        return <input type="file" name={name} id={id} onChange={onChange}></input>;
       case 'text':
       default:
         return (

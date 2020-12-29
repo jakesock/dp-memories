@@ -21,7 +21,10 @@ const postSchema = Schema({
       trim: true,
     },
   ],
-  selectedFile: String,
+  selectedFile: {
+    cloudId: String,
+    url: String,
+  },
   likeCount: {
     type: Number,
     default: 0,

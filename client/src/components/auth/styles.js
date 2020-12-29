@@ -17,7 +17,7 @@ export default makeStyles((theme) => ({
   fileInput: {
     display: 'flex',
     justifyContent: 'center',
-    width: '97%',
+    width: '95%',
     margin: '10px 0',
   },
   buttonSubmit: {
@@ -39,5 +39,12 @@ export default makeStyles((theme) => ({
       position: 'sticky',
       top: 30,
     },
+  },
+  chosenImage: {
+    width: '95%',
+    maxHeight: '300px',
+    borderRadius: '5px',
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
 }));

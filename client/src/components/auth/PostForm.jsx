@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import FileBase from 'react-file-base64';
 import { Button, Typography, Paper } from '@material-ui/core';
 
 import FormHeader from './layout/FormHeader/FormHeader';
@@ -28,16 +27,15 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   const isAuthenticated = useSelector((state) => {
     return state.auth.isAuthenticated;
   });
-
   const post = useSelector((state) => {
     return currentPostId
       ? state.posts.posts.find((post) => post._id === currentPostId)
       : null;
   });
-
   const error = useSelector((state) => {
     return state.error;
   });
+
   const prevError = usePrevious(error);
 
   const dispatch = useDispatch();
@@ -80,6 +78,18 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
 
   const onChange = (e) => {
     setPostData({ ...postData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setPostData({ ...postData, selectedFile: reader.result });
+      };
+    }
   };
 
   const clear = () => {
@@ -133,15 +143,20 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
         <Typography variant="caption" color="textSecondary" align="center">
           Comma-seperated (i.e. thanksgiving, gobblegobble)
         </Typography>
-        <div className={classes.fileInput}>
-          <FileBase
-            type="file"
-            multiple={false}
-            onDone={({ base64 }) =>
-              setPostData({ ...postData, selectedFile: base64 })
-            }
+        <FormInput
+          name="selectedFile"
+          id="selectedFile"
+          inputType="file"
+          formData={postData}
+          onChange={handleFileInputChange}
+        />
+        {postData.selectedFile && (
+          <img
+            className={classes.chosenImage}
+            src={postData.selectedFile}
+            alt="chosen"
           />
-        </div>
+        )}
         <Button
           className={classes.buttonSubmit}
           variant="contained"
