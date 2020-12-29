@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Typography } from '@material-ui/core';
 
-import LogoutBtn from './LogoutBtn';
+import LogoutBtn from './LogoutBtn/LogoutBtn';
 
 import useStyles from './styles';
 

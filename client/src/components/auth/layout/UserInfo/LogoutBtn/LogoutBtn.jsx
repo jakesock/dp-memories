@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Typography } from '@material-ui/core';
 
-import { logout } from '../../actions/auth';
+import { logout } from '../../../../../actions/auth';
 
 import useStyles from './styles';
 

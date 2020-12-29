@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
 import { Button, Typography, Paper } from '@material-ui/core';
 
-import FormHeader from '../../layout/FormHeader/FormHeader';
-import UserInfo from '../../auth/UserInfo';
-import FormInput from '../../auth/layout/FormInput';
+import FormHeader from './layout/FormHeader/FormHeader';
+import UserInfo from './layout/UserInfo/UserInfo';
+import FormInput from './layout/FormInput';
 
-import { createPost, updatePost } from '../../../actions/posts';
-import { clearErrors } from '../../../actions/error';
+import { createPost, updatePost } from '../../actions/posts';
+import { clearErrors } from '../../actions/error';
 
-import usePrevious from '../../../hooks/usePrevious';
+import usePrevious from '../../hooks/usePrevious';
 import useStyles from './styles';
 
 const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {

@@ -3,7 +3,7 @@ import { TextField, InputAdornment, IconButton } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-const FormInput = ({ label, name, id, inputType, formData, onChange }) => {
+const FormInput = ({ label, name, id, inputType, formData, onChange, required }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
@@ -34,6 +34,7 @@ const FormInput = ({ label, name, id, inputType, formData, onChange }) => {
               ),
             }}
             variant="outlined"
+            required={required ? true : false}
             fullWidth
           />
         );
@@ -48,6 +49,7 @@ const FormInput = ({ label, name, id, inputType, formData, onChange }) => {
             value={formData[name]}
             onChange={onChange}
             variant="outlined"
+            required={required ? true : false}
             fullWidth
           />
         );

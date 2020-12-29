@@ -14,6 +14,12 @@ export default makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
+  fileInput: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '97%',
+    margin: '10px 0',
+  },
   buttonSubmit: {
     marginBottom: 10,
   },
@@ -31,7 +37,7 @@ export default makeStyles((theme) => ({
   [theme.breakpoints.up('md')]: {
     stickyForm: {
       position: 'sticky',
-      top: 24,
+      top: 30,
     },
   },
 }));

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Typography } from '@material-ui/core';
 
-import FormError from './FormError';
+import FormError from './FormError/FormError';
 
 import useStyles from './styles';
 

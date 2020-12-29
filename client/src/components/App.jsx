@@ -5,13 +5,13 @@ import { Container, Grow, Grid } from '@material-ui/core';
 import { loadUser } from '../actions/auth';
 import { getPosts } from '../actions/posts';
 
+import AppBar from './layout/AppBar/AppBar';
+import BackToTop from './layout/BackToTop/BackToTop';
+import Snackbar from './layout/Snackbar/Snackbar';
 import LoginForm from './auth/LoginForm';
 import RegisterForm from './auth/RegisterForm';
-import PostForm from './Posts/PostForm/PostForm';
+import PostForm from './auth/PostForm';
 import Posts from './Posts/Posts';
-import Snackbar from './layout/Snackbar/Snackbar';
-import BackToTop from './layout/BackToTop/BackToTop';
-import AppBar from './layout/AppBar/AppBar';
 
 import useStyles from './styles';
 
@@ -54,7 +54,7 @@ const App = () => {
     <Container maxwidth="lg">
       <AppBar />
       <Snackbar />
-      <BackToTop showBelow={250} />
+      <BackToTop showBelow={102} />
       <Grow in>
         <Container>
           <Grid
@@ -67,7 +67,6 @@ const App = () => {
             <Grid item xs={12} sm={12} md={7}>
               <Posts setCurrentPostId={setCurrentPostId} />
             </Grid>
-
             <Grid item xs={12} sm={12} md={4}>
               {formToRender()}
             </Grid>
