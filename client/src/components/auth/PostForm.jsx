@@ -20,6 +20,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
     selectedFile: '',
   });
   const [errorMsg, setErrorMsg] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const user = useSelector((state) => {
     return state.auth.user;
@@ -63,14 +64,23 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMsg(null);
+    if (postData.title === '' || postData.message === '') {
+      setErrorMsg('Title and message cannot be empty!');
+      return;
+    }
+
     if (isAuthenticated) {
       if (currentPostId) {
         dispatch(updatePost(currentPostId, postData));
       } else {
         dispatch(createPost(postData));
       }
-      dispatch(clearErrors());
-      clear();
+
+      if (!errorMsg) {
+        dispatch(clearErrors());
+        clear();
+      }
     } else {
       setForm('login');
     }
@@ -88,6 +98,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         setPostData({ ...postData, selectedFile: reader.result });
+        setPreviewImage(reader.result);
       };
     }
   };
@@ -95,6 +106,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   const clear = () => {
     dispatch(clearErrors());
     setCurrentPostId(null);
+    setPreviewImage(null);
     setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
 
@@ -143,6 +155,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
         <Typography variant="caption" color="textSecondary" align="center">
           Comma-seperated (i.e. thanksgiving, gobblegobble)
         </Typography>
+
         <FormInput
           name="selectedFile"
           id="selectedFile"
@@ -150,12 +163,8 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
           formData={postData}
           onChange={handleFileInputChange}
         />
-        {postData.selectedFile && (
-          <img
-            className={classes.chosenImage}
-            src={postData.selectedFile}
-            alt="chosen"
-          />
+        {postData.selectedFile !== '' && (
+          <img className={classes.chosenImage} src={previewImage} alt="chosen" />
         )}
         <Button
           className={classes.buttonSubmit}

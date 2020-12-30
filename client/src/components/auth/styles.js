@@ -41,8 +41,8 @@ export default makeStyles((theme) => ({
     },
   },
   chosenImage: {
-    width: '95%',
-    maxHeight: '300px',
+    maxWidth: '95%',
+    maxHeight: '200px',
     borderRadius: '5px',
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(1),

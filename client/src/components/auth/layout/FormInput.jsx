@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { TextField, InputAdornment, IconButton } from '@material-ui/core';
+import { TextField, InputAdornment, IconButton, Button } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 
 const FormInput = ({ label, name, id, inputType, formData, onChange, required }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +40,24 @@ const FormInput = ({ label, name, id, inputType, formData, onChange, required })
           />
         );
       case 'file':
-        return <input type="file" name={name} id={id} onChange={onChange}></input>;
+        return (
+          <Button
+            variant="contained"
+            component="label"
+            color="default"
+            endIcon={<AddAPhotoIcon />}
+            disableElevation
+          >
+            Choose An Image
+            <input
+              type="file"
+              name={name}
+              id={id}
+              onChange={onChange}
+              hidden
+            ></input>
+          </Button>
+        );
       case 'text':
       default:
         return (

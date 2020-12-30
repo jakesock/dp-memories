@@ -39,6 +39,7 @@
 #### General Functionality
 
 - [x] Add 'Back To Top' button + functionality
+- [ ] Add client side validation to global error state (Going to have to rework the create post form logic)
 - [ ] Add loaders for asynchronous post actions
 
 #### Forms
@@ -51,6 +52,7 @@
 - [x] Add show/hide password functionality on auth forms
 - [x] Make form sticky on > medium sized screens
 - [x] Change image upload to a cloud service
+- [ ] Implement client-side form validation
 - [ ] Style file input
 - [ ] Add remove button on image preview
 - [ ] Find a way to delete images when user changes image while editing
