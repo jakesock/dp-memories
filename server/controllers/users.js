@@ -84,3 +84,16 @@ export const getUserData = async (req, res) => {
     res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
+
+export const isUsernameTaken = async (req, res) => {
+  try {
+    const { username } = req.body;
+    const existingUsername = await User.findOne({ username });
+
+    if (existingUsername) return res.json(true);
+    return res.json(false);
+  } catch (err) {
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
+  }
+};

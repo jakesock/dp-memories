@@ -212,7 +212,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
           onClick={clear}
           fullWidth
         >
-          Clear
+          {currentPostId ? 'Cancel' : 'Clear'}
         </Button>
       </form>
     </Paper>

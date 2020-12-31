@@ -14,3 +14,5 @@ export const registerUser = (newUser, config) =>
   axios.post('/users/register', newUser, config);
 export const loginUser = (user, config) => axios.post('/users/login', user, config);
 export const getUserData = (config) => axios.get('/users', config);
+export const isUsernameTaken = (username, config) =>
+  axios.post('/users/isUsernameTaken', username, config);

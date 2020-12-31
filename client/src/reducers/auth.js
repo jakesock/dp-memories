@@ -7,6 +7,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  CHECK_USERNAME,
 } from '../constants/actionTypes';
 
 const intitialState = {
@@ -14,6 +15,7 @@ const intitialState = {
   isAuthenticated: false,
   isLoading: false,
   user: null,
+  isUsernameTaken: false,
 };
 
 const authReducer = (state = intitialState, action) => {
@@ -50,6 +52,11 @@ const authReducer = (state = intitialState, action) => {
         isAuthenticated: false,
         isLoading: false,
         user: null,
+      };
+    case CHECK_USERNAME:
+      return {
+        ...state,
+        isUsernameTaken: action.payload,
       };
     default:
       return state;

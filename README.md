@@ -11,10 +11,11 @@
 #### Front-End
 
 - React as front-end library/framework
-- Redux (using React-Redux) for state-management
+- Redux for state-management
+- React-Redux to connect Redux with React
 - Redux-Thunk for asynchronous action creators
 - Axios for API requests
-- React-File-Base64 for image upload (planning to move to cloudinary soon)
+- Cloudinary for image hosting
 - Moment for displaying distance between post date and current date
 - MaterialUI for pre-styled components
 
@@ -28,20 +29,10 @@
 
 #### General Layout/Styling
 
-- [ ] Fix back to top button placement on mobile
 - [ ] Update AppBar
-
-#### General Feedback
-
-- None, for now
-
-#### General Functionality
-
-- None, for now
 
 #### Forms
 
-- [ ] Server: Make isUsernameTaken endpoint
 - [ ] Client: Check if username is taken on register form change
 
 #### Posts
@@ -68,6 +59,7 @@
 #### General Layout/Styling
 
 - [x] Fix layout on extra small screens
+- [x] Fix back to top button placement on mobile
 
 #### General Feedback
 
@@ -95,6 +87,7 @@
 - [x] Add change image button on update form
 - [x] If image changed on post update, remove original from cloud storage
 - [x] Change how server errors operate on forms (save form info if something goes wrong)
+- [x] Server: Make isUsernameTaken endpoint
 
 #### Posts
 
