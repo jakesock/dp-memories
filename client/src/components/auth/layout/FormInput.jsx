@@ -4,8 +4,22 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 
-const FormInput = ({ label, name, id, inputType, formData, onChange, required }) => {
+import useStyles from './styles';
+
+const FormInput = ({
+  label,
+  name,
+  id,
+  inputType,
+  formData,
+  onChange,
+  error = null,
+  helperText = null,
+  currentPost = false,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
+
+  const classes = useStyles();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -35,20 +49,21 @@ const FormInput = ({ label, name, id, inputType, formData, onChange, required })
               ),
             }}
             variant="outlined"
-            required={required ? true : false}
+            {...(error && { error: true, helperText: error })}
             fullWidth
           />
         );
       case 'file':
         return (
           <Button
+            className={classes.buttonChooseImage}
             variant="contained"
             component="label"
             color="default"
             endIcon={<AddAPhotoIcon />}
             disableElevation
           >
-            Choose An Image
+            Choose {currentPost ? 'New' : 'An'} Image
             <input
               type="file"
               name={name}
@@ -69,8 +84,9 @@ const FormInput = ({ label, name, id, inputType, formData, onChange, required })
             value={formData[name]}
             onChange={onChange}
             variant="outlined"
-            required={required ? true : false}
+            {...(error && { error: true, helperText: error })}
             fullWidth
+            {...(helperText && { helperText: helperText })}
           />
         );
     }

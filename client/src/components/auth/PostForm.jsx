@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Typography, Paper } from '@material-ui/core';
+import { Button, Paper } from '@material-ui/core';
 
 import FormHeader from './layout/FormHeader/FormHeader';
 import UserInfo from './layout/UserInfo/UserInfo';
 import FormInput from './layout/FormInput';
+import FormLoading from './layout/FormLoading/FormLoading';
 
 import { createPost, updatePost } from '../../actions/posts';
 import { clearErrors } from '../../actions/error';
@@ -19,8 +20,10 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
     tags: '',
     selectedFile: '',
   });
+
   const [errorMsg, setErrorMsg] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [inputError, setInputError] = useState({});
 
   const user = useSelector((state) => {
     return state.auth.user;
@@ -36,8 +39,12 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   const error = useSelector((state) => {
     return state.error;
   });
+  const isAsyncLoading = useSelector((state) => {
+    return state.asyncLoading.formLoading;
+  });
 
   const prevError = usePrevious(error);
+  const prevPostData = usePrevious(postData);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -59,35 +66,37 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   });
 
   useEffect(() => {
-    if (post) setPostData(post);
+    if (post) {
+      setInputError({});
+      setPostData(post);
+      setPreviewImage(post.selectedFile.url);
+    }
   }, [post]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg(null);
-    if (postData.title === '' || postData.message === '') {
-      setErrorMsg('Title and message cannot be empty!');
-      return;
-    }
 
     if (isAuthenticated) {
-      if (currentPostId) {
-        dispatch(updatePost(currentPostId, postData));
-      } else {
-        dispatch(createPost(postData));
-      }
+      if (validate()) {
+        if (currentPostId) {
+          dispatch(updatePost(currentPostId, postData));
+        } else {
+          dispatch(createPost(postData));
+        }
 
-      if (!errorMsg) {
-        dispatch(clearErrors());
-        clear();
+        if ((!errorMsg || prevPostData !== postData) && !isAsyncLoading) {
+          dispatch(clearErrors());
+          clear();
+        }
       }
     } else {
       setForm('login');
     }
   };
 
-  const onChange = (e) => {
+  const handleInputChange = (e) => {
     setPostData({ ...postData, [e.target.name]: e.target.value });
+    validate({ [e.target.name]: e.target.value });
   };
 
   const handleFileInputChange = (e) => {
@@ -103,14 +112,31 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
     }
   };
 
+  const validate = (fieldValues = postData) => {
+    let temp = { ...inputError };
+    if ('title' in fieldValues)
+      temp.title = fieldValues.title ? '' : 'Title is required!';
+    if ('message' in fieldValues)
+      temp.message = fieldValues.message ? '' : 'Message is required!';
+
+    setInputError({
+      ...temp,
+    });
+    if (fieldValues === postData)
+      return Object.values(temp).every((value) => value === '');
+  };
+
   const clear = () => {
     dispatch(clearErrors());
     setCurrentPostId(null);
     setPreviewImage(null);
+    setInputError({});
     setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
 
-  return (
+  return isAsyncLoading ? (
+    <FormLoading />
+  ) : (
     <Paper className={`${classes.paper} ${classes.stickyForm}`}>
       <form
         autoComplete="off"
@@ -129,7 +155,8 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
           id="title"
           inputType="text"
           formData={postData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.title}
         />
         <FormInput
           label="Message"
@@ -137,7 +164,8 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
           id="message"
           inputType="text"
           formData={postData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.message}
         />
         <FormInput
           label="Tags"
@@ -151,21 +179,21 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
               tags: e.target.value.split(','),
             })
           }
+          helperText="Comma-seperated (i.e. thanksgiving, gobblegobble)"
         />
-        <Typography variant="caption" color="textSecondary" align="center">
-          Comma-seperated (i.e. thanksgiving, gobblegobble)
-        </Typography>
-
         <FormInput
           name="selectedFile"
           id="selectedFile"
           inputType="file"
           formData={postData}
           onChange={handleFileInputChange}
+          {...(currentPostId && { currentPost: true })}
         />
-        {postData.selectedFile !== '' && (
-          <img className={classes.chosenImage} src={previewImage} alt="chosen" />
-        )}
+        <div className={classes.imageContainer}>
+          {postData.selectedFile !== '' && (
+            <img className={classes.chosenImage} src={previewImage} alt="chosen" />
+          )}
+        </div>
         <Button
           className={classes.buttonSubmit}
           variant="contained"

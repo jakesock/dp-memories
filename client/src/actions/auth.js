@@ -1,6 +1,7 @@
 import * as api from '../api';
 import { returnErrors } from './error';
 import { setSnackbar } from './snackbar';
+import { setLoading, doneLoading } from './asyncLoading';
 
 import {
   USER_LOADED,
@@ -30,6 +31,8 @@ export const register = ({ username, password, passwordCheck }) => async (
   dispatch,
 ) => {
   try {
+    dispatch(setLoading('Registering...'));
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -40,15 +43,23 @@ export const register = ({ username, password, passwordCheck }) => async (
 
     const { data } = await api.registerUser(body, config);
     dispatch({ type: REGISTER_SUCCESS, payload: data });
-    dispatch(setSnackbar(true, 'success', 'Successfully registered and logged in!'));
+
+    dispatch(doneLoading());
+    dispatch(setSnackbar(true, 'success', `Welcome, ${username}!`));
   } catch (err) {
+    dispatch(doneLoading());
     dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
     dispatch({ type: REGISTER_FAIL });
+    dispatch(
+      setSnackbar(true, 'error', 'Oops! Something went wrong, please try again!'),
+    );
   }
 };
 
 export const login = ({ username, password }) => async (dispatch) => {
   try {
+    dispatch(setLoading('Logging you in...'));
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -59,10 +70,16 @@ export const login = ({ username, password }) => async (dispatch) => {
 
     const { data } = await api.loginUser(body, config);
     dispatch({ type: LOGIN_SUCCESS, payload: data });
-    dispatch(setSnackbar(true, 'success', 'Successfully logged in!'));
+
+    dispatch(doneLoading());
+    dispatch(setSnackbar(true, 'success', `Welcome back, ${username}!`));
   } catch (err) {
+    dispatch(doneLoading());
     dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
     dispatch({ type: LOGIN_FAIL });
+    dispatch(
+      setSnackbar(true, 'error', 'Oops! Something went wrong, please try again!'),
+    );
   }
 };
 
@@ -72,7 +89,9 @@ export const logout = () => (dispatch) => {
     dispatch(setSnackbar(true, 'success', 'Successfully logged out!'));
   } catch (err) {
     dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
-    dispatch(setSnackbar(true, 'error', err.response.data));
+    dispatch(
+      setSnackbar(true, 'error', 'Oops! Something went wrong, please try again!'),
+    );
   }
 };
 

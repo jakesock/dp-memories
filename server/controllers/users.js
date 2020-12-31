@@ -36,7 +36,8 @@ export const registerUser = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
 
@@ -67,7 +68,8 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
 
@@ -78,6 +80,7 @@ export const getUserData = async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };

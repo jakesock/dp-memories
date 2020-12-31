@@ -1,6 +1,9 @@
 import PostMessage from '../models/postMessage.js';
 import cloudinary from '../utils/cloudinary.js';
 
+const defaultImageUrl =
+  'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png';
+
 export const getPosts = async (req, res) => {
   try {
     const postMessages = await PostMessage.find()
@@ -9,7 +12,8 @@ export const getPosts = async (req, res) => {
 
     res.status(200).json(postMessages);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
 
@@ -20,20 +24,28 @@ export const createPost = async (req, res) => {
     if (!title || !message)
       return res.status(400).json({ msg: 'Title and message cannot be empty!' });
 
-    const imageRes = await cloudinary.v2.uploader.upload(selectedFile, {
-      upload_preset: 'dp_memories',
-    });
-
     const post = new PostMessage({
       title,
       message,
       tags,
-      selectedFile: {
-        cloudId: imageRes.public_id,
-        url: imageRes.url,
-      },
     });
     post.creator = req.user.id;
+
+    if (selectedFile !== '') {
+      const imageRes = await cloudinary.v2.uploader.upload(selectedFile, {
+        upload_preset: 'dp_memories',
+      });
+
+      post.selectedFile = {
+        cloudId: imageRes.public_id,
+        url: imageRes.url,
+      };
+    } else {
+      post.selectedFile = {
+        cloudId: -1,
+        url: defaultImageUrl,
+      };
+    }
 
     const savedPost = await post.save();
 
@@ -45,7 +57,8 @@ export const createPost = async (req, res) => {
 
     res.status(201).json(response);
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
 
@@ -64,6 +77,21 @@ export const updatePost = async (req, res) => {
     const { id: _id } = req.params;
     const post = req.body;
 
+    if (postToUpdate.selectedFile !== post.selectedFile) {
+      const imageRes = await cloudinary.v2.uploader.upload(post.selectedFile, {
+        upload_preset: 'dp_memories',
+      });
+
+      post.selectedFile = {
+        cloudId: imageRes.public_id,
+        url: imageRes.url,
+      };
+
+      if (postToUpdate.selectedFile.cloudId !== -1) {
+        await cloudinary.v2.uploader.destroy(postToUpdate.selectedFile.cloudId);
+      }
+    }
+
     const updatedPost = await PostMessage.findByIdAndUpdate(
       _id,
       { ...post, _id },
@@ -72,7 +100,8 @@ export const updatePost = async (req, res) => {
 
     res.json(updatedPost);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
 
@@ -88,12 +117,16 @@ export const deletePost = async (req, res) => {
         msg: 'No post found with this ID that belongs to the current user!',
       });
 
+    if (post.selectedFile.cloudId !== -1) {
+      await cloudinary.v2.uploader.destroy(post.selectedFile.cloudId);
+    }
+
     await PostMessage.findByIdAndRemove(req.params.id);
-    await cloudinary.v2.uploader.destroy(post.selectedFile.cloudId);
 
     res.json({ message: 'Post deleted successfully!' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };
 
@@ -129,6 +162,7 @@ export const likePost = async (req, res) => {
 
     res.json(updatedPost);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log(err.message, err);
+    res.status(500).json({ msg: 'Oops! Something went wrong, please try again!' });
   }
 };

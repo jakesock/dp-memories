@@ -28,19 +28,57 @@
 
 #### General Layout/Styling
 
-- [x] Fix layout on extra small screens
+- [ ] Fix back to top button placement on mobile
 - [ ] Update AppBar
+
+#### General Feedback
+
+- None, for now
+
+#### General Functionality
+
+- None, for now
+
+#### Forms
+
+- [ ] Server: Make isUsernameTaken endpoint
+- [ ] Client: Check if username is taken on register form change
+
+#### Posts
+
+- [ ] Fix style for longer post messages or limit input character count (Future update planned will add functionality for longer posts (and possibly comments))
+
+#### General Clean Up & Deploy
+
+- [ ] Check various things on mobile and fix if need be
+- [ ] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, etc.)
+- [ ] Build and deploy v2
+
+## Potential Future Features
+
+- Infinite scroll
+- Filter posts by tag on tag click
+- Filter posts by user on username click
+- Make tags space-seperated, displaying them as removable chips after space in create post form
+- Longer post messages end with '...'. When clicked, expand post with scrollable modal/dialog
+- Add Post Comments
+
+## TODO (Old)
+
+#### General Layout/Styling
+
+- [x] Fix layout on extra small screens
 
 #### General Feedback
 
 - [x] Make Snackbar component for general messages
 - [x] Place Snackbar component and pass several error, success, and info props for general alerting where needed
+- [x] Change non-specific server error messages to "Oops, Something went wrong! Please try again!"
 
 #### General Functionality
 
 - [x] Add 'Back To Top' button + functionality
-- [ ] Add client side validation to global error state (Going to have to rework the create post form logic)
-- [ ] Add loaders for asynchronous post actions
+- [x] Add loader for asynchronous actions
 
 #### Forms
 
@@ -52,28 +90,13 @@
 - [x] Add show/hide password functionality on auth forms
 - [x] Make form sticky on > medium sized screens
 - [x] Change image upload to a cloud service
-- [ ] Implement client-side form validation
-- [ ] Style file input
-- [ ] Add remove button on image preview
-- [ ] Find a way to delete images when user changes image while editing
+- [x] Implement client-side form validation
+- [x] Style file input
+- [x] Add change image button on update form
+- [x] If image changed on post update, remove original from cloud storage
+- [x] Change how server errors operate on forms (save form info if something goes wrong)
 
 #### Posts
 
 - [x] Add "Liked" vs "Not Liked" styles for like button
 - [x] Add Edit and Delete icons to PostDropdown options
-- [ ] Fix style for longer post messages or limit input character count (Future update planned will add functionality for longer posts (and possibly comments))
-
-#### General Clean Up & Deploy
-
-- [ ] Check various things on mobile and fix if need be
-- [ ] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, etc.)
-- [ ] Build and deploy v2
-
-## TODO (FUTURE)
-
-- [ ] Implement infinite scroll
-- [ ] Add filter posts by tag on tag click
-- [ ] Add filter posts by user on username click
-- [ ] Make tags space-seperated, displaying them as removable chips after space
-- [ ] Longer post messages end with '...'. When clicked, expand post with scrollable modal/dialog
-- [ ] Add Post Comments?

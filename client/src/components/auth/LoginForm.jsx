@@ -5,6 +5,7 @@ import { Button, Paper } from '@material-ui/core';
 import FormFooter from './layout/FormFooter/FormFooter';
 import FormHeader from './layout/FormHeader/FormHeader';
 import FormInput from './layout/FormInput';
+import FormLoading from './layout/FormLoading/FormLoading';
 
 import { login } from '../../actions/auth';
 import { clearErrors } from '../../actions/error';
@@ -18,11 +19,16 @@ const LoginForm = ({ setForm }) => {
     password: '',
   });
   const [errorMsg, setErrorMsg] = useState(null);
+  const [inputError, setInputError] = useState({});
 
+  const isAsyncLoading = useSelector((state) => {
+    return state.asyncLoading.formLoading;
+  });
   const error = useSelector((state) => {
     return state.error;
   });
   const prevError = usePrevious(error);
+  const prevFormData = usePrevious(formData);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -39,19 +45,36 @@ const LoginForm = ({ setForm }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const { username, password } = formData;
-    const user = {
-      username,
-      password,
-    };
-
-    dispatch(clearErrors());
-    dispatch(login(user));
+    if (validate()) {
+      const { username, password } = formData;
+      const user = {
+        username,
+        password,
+      };
+      if ((!errorMsg || prevFormData !== formData) && !isAsyncLoading) {
+        dispatch(clearErrors());
+        dispatch(login(user));
+      }
+    }
   };
 
-  const onChange = (e) => {
+  const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    validate({ [e.target.name]: e.target.value });
+  };
+
+  const validate = (fieldValues = formData) => {
+    let temp = { ...inputError };
+    if ('username' in fieldValues)
+      temp.username = fieldValues.username ? '' : 'Username is required!';
+    if ('password' in fieldValues)
+      temp.password = fieldValues.password ? '' : 'Password is required!';
+
+    setInputError({
+      ...temp,
+    });
+    if (fieldValues === formData)
+      return Object.values(temp).every((value) => value === '');
   };
 
   const changeForm = () => {
@@ -59,7 +82,9 @@ const LoginForm = ({ setForm }) => {
     dispatch(clearErrors());
   };
 
-  return (
+  return isAsyncLoading ? (
+    <FormLoading />
+  ) : (
     <Paper className={`${classes.paper} ${classes.stickyForm}`}>
       <form
         autoComplete="off"
@@ -74,7 +99,8 @@ const LoginForm = ({ setForm }) => {
           id="username"
           inputType="text"
           formData={formData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.username}
         />
         <FormInput
           label="Password"
@@ -82,7 +108,8 @@ const LoginForm = ({ setForm }) => {
           id="password"
           inputType="password"
           formData={formData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.password}
         />
         <Button
           className={classes.buttonSubmit}

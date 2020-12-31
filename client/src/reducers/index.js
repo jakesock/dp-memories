@@ -4,5 +4,6 @@ import auth from './auth';
 import error from './error';
 import posts from './posts';
 import snackbar from './snackbar';
+import asyncLoading from './asyncLoading';
 
-export default combineReducers({ auth, error, posts, snackbar });
+export default combineReducers({ asyncLoading, auth, error, posts, snackbar });

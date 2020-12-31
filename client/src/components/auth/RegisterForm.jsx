@@ -5,6 +5,7 @@ import { Button, Paper } from '@material-ui/core';
 import FormFooter from './layout/FormFooter/FormFooter';
 import FormHeader from './layout/FormHeader/FormHeader';
 import FormInput from './layout/FormInput';
+import FormLoading from './layout/FormLoading/FormLoading';
 
 import { register } from '../../actions/auth';
 import { clearErrors } from '../../actions/error';
@@ -19,11 +20,16 @@ const RegisterForm = ({ setForm }) => {
     passwordCheck: '',
   });
   const [errorMsg, setErrorMsg] = useState(null);
+  const [inputError, setInputError] = useState({});
 
+  const isAsyncLoading = useSelector((state) => {
+    return state.asyncLoading.formLoading;
+  });
   const error = useSelector((state) => {
     return state.error;
   });
   const prevError = usePrevious(error);
+  const prevFormData = usePrevious(formData);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -41,19 +47,42 @@ const RegisterForm = ({ setForm }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { username, password, passwordCheck } = formData;
-    const newUser = {
-      username,
-      password,
-      passwordCheck,
-    };
+    if (validate()) {
+      const { username, password, passwordCheck } = formData;
+      const newUser = {
+        username,
+        password,
+        passwordCheck,
+      };
 
-    dispatch(clearErrors());
-    dispatch(register(newUser));
+      if ((!errorMsg || prevFormData !== formData) && !isAsyncLoading) {
+        dispatch(clearErrors());
+        dispatch(register(newUser));
+      }
+    }
   };
 
-  const onChange = (e) => {
+  const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    validate({ [e.target.name]: e.target.value });
+  };
+
+  const validate = (fieldValues = formData) => {
+    let temp = { ...inputError };
+    if ('username' in fieldValues)
+      temp.username = fieldValues.username ? '' : 'Username is required!';
+    if ('password' in fieldValues)
+      temp.password = fieldValues.password ? '' : 'Password is required!';
+    if ('passwordCheck' in fieldValues)
+      temp.passwordCheck = fieldValues.passwordCheck
+        ? ''
+        : 'Confirm password is required!';
+
+    setInputError({
+      ...temp,
+    });
+    if (fieldValues === formData)
+      return Object.values(temp).every((value) => value === '');
   };
 
   const changeForm = () => {
@@ -61,7 +90,9 @@ const RegisterForm = ({ setForm }) => {
     dispatch(clearErrors());
   };
 
-  return (
+  return isAsyncLoading ? (
+    <FormLoading />
+  ) : (
     <Paper className={`${classes.paper} ${classes.stickyForm}`}>
       <form
         autoComplete="off"
@@ -76,7 +107,8 @@ const RegisterForm = ({ setForm }) => {
           id="username"
           inputType="text"
           formData={formData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.username}
         />
         <FormInput
           label="Password"
@@ -84,7 +116,8 @@ const RegisterForm = ({ setForm }) => {
           id="password"
           inputType="password"
           formData={formData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.password}
         />
         <FormInput
           label="Confirm Password"
@@ -92,7 +125,8 @@ const RegisterForm = ({ setForm }) => {
           id="passwordCheck"
           inputType="password"
           formData={formData}
-          onChange={onChange}
+          onChange={handleInputChange}
+          error={inputError.passwordCheck}
         />
         <Button
           className={classes.buttonSubmit}

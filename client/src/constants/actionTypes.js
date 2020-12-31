@@ -22,3 +22,7 @@ export const POSTS_LOADING = 'POSTS_LOADING';
 
 // Snackbar types
 export const SET_SNACKBAR = 'SET_SNACKBAR';
+
+// Async Loading Types
+export const SET_LOADING = 'SET_LOADING';
+export const DONE_LOADING = 'DONE_LOADING';

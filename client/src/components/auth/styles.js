@@ -40,11 +40,15 @@ export default makeStyles((theme) => ({
       top: 30,
     },
   },
+  imageContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
   chosenImage: {
-    maxWidth: '95%',
-    maxHeight: '200px',
+    maxWidth: '100%',
+    maxHeight: '150px',
     borderRadius: '5px',
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
+    marginBottom: 10,
   },
 }));
