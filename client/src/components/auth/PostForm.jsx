@@ -20,10 +20,14 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
     tags: '',
     selectedFile: '',
   });
+  const [labels, setLabels] = useState({
+    title: 'Title',
+    message: 'Message',
+  });
 
-  const [errorMsg, setErrorMsg] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [inputError, setInputError] = useState({});
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const user = useSelector((state) => {
     return state.auth.user;
@@ -95,8 +99,25 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   };
 
   const handleInputChange = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
-    validate({ [e.target.name]: e.target.value });
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setPostData({ ...postData, [name]: value });
+    validate({ [name]: value });
+
+    if (name === 'title') {
+      if (value.length > 0) {
+        setLabels({ ...labels, title: `Title (${value.length}/24)` });
+      } else {
+        setLabels({ ...labels, title: 'Title' });
+      }
+    } else if (name === 'message') {
+      if (value.length > 0) {
+        setLabels({ ...labels, message: `Message (${value.length}/160)` });
+      } else {
+        setLabels({ ...labels, message: 'Message' });
+      }
+    }
   };
 
   const handleFileInputChange = (e) => {
@@ -114,10 +135,24 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
 
   const validate = (fieldValues = postData) => {
     let temp = { ...inputError };
-    if ('title' in fieldValues)
-      temp.title = fieldValues.title ? '' : 'Title is required!';
-    if ('message' in fieldValues)
-      temp.message = fieldValues.message ? '' : 'Message is required!';
+    if ('title' in fieldValues) {
+      if (fieldValues.title === '') {
+        temp.title = 'Title is required!';
+      } else if (fieldValues.title.length > 24) {
+        temp.title = 'Title is too long! (Max 24 Characters)';
+      } else {
+        temp.title = '';
+      }
+    }
+    if ('message' in fieldValues) {
+      if (fieldValues.message === '') {
+        temp.message = 'Message is required!';
+      } else if (fieldValues.message.length > 160) {
+        temp.message = 'Message is too long! (Max 160 Characters)';
+      } else {
+        temp.message = '';
+      }
+    }
 
     setInputError({
       ...temp,
@@ -131,6 +166,7 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
     setCurrentPostId(null);
     setPreviewImage(null);
     setInputError({});
+    setLabels({ title: 'Title', message: 'Message' });
     setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
 
@@ -150,22 +186,24 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
         />
         {isAuthenticated ? <UserInfo username={user.username} /> : null}
         <FormInput
-          label="Title"
+          label={labels.title}
           name="title"
           id="title"
           inputType="text"
           formData={postData}
           onChange={handleInputChange}
           error={inputError.title}
+          helperText="Max 16 Characters"
         />
         <FormInput
-          label="Message"
+          label={labels.message}
           name="message"
           id="message"
           inputType="text"
           formData={postData}
           onChange={handleInputChange}
           error={inputError.message}
+          helperText="Max 160 Characters"
         />
         <FormInput
           label="Tags"

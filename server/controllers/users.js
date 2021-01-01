@@ -9,6 +9,10 @@ export const registerUser = async (req, res) => {
 
     if (!username || !password || !passwordCheck)
       return res.status(400).json({ msg: 'Not all fields have been entered!' });
+    if (username.length > 16)
+      return res
+        .status(400)
+        .json({ msg: 'Username is too long! (Max 16 Characters)' });
     if (password !== passwordCheck)
       return res.status(400).json({ msg: 'Passwords do not match!' });
 

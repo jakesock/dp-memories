@@ -14,45 +14,31 @@
 - Redux for state-management
 - React-Redux to connect Redux with React
 - Redux-Thunk for asynchronous action creators
-- Axios for API requests
-- Cloudinary for image hosting
-- Moment for displaying distance between post date and current date
 - MaterialUI for pre-styled components
+- Axios for API requests
+- Moment for displaying distance between post date and current date
 
 #### Back-End
 
 - Express/Node as API Framework
 - Mongo for the database and Mongoose as the ODM
 - JWTs (JSON Web Tokens) for authentication
+- Cloudinary for image hosting
 
 ## TODO
 
 #### General Layout/Styling
 
-- [ ] Update AppBar
-
-#### Forms
-
-- [ ] Client: Check if username is taken on register form change
-
-#### Posts
-
-- [ ] Fix style for longer post messages or limit input character count (Future update planned will add functionality for longer posts (and possibly comments))
-
-#### General Clean Up & Deploy
-
-- [ ] Check various things on mobile and fix if need be
-- [ ] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, etc.)
-- [ ] Build and deploy v2
+- [ ] Update AppBar with logo when it comes
 
 ## Potential Future Features
 
-- Infinite scroll
 - Filter posts by tag on tag click
 - Filter posts by user on username click
 - Make tags space-seperated, displaying them as removable chips after space in create post form
 - Longer post messages end with '...'. When clicked, expand post with scrollable modal/dialog
 - Add Post Comments
+- Infinite scroll
 
 ## TODO (Old)
 
@@ -88,8 +74,16 @@
 - [x] If image changed on post update, remove original from cloud storage
 - [x] Change how server errors operate on forms (save form info if something goes wrong)
 - [x] Server: Make isUsernameTaken endpoint
+- [x] Client: Check if username is taken on register form change
 
 #### Posts
 
 - [x] Add "Liked" vs "Not Liked" styles for like button
 - [x] Add Edit and Delete icons to PostDropdown options
+- [x] Limit input character count (Future update planned will add functionality for expanding longer posts (and possibly comments))
+
+#### General Clean Up & Deploy
+
+- [x] Check various things on mobile and fix if need be
+- [x] Go through entirety of code base and make her beautiful (remove console logs and unused vars, seperate components where it makes sense, organize import statements, etc.)
+- [x] Build and deploy v2

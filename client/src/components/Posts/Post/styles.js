@@ -43,6 +43,12 @@ export default makeStyles({
   },
   title: {
     padding: '0 16px',
+    marginBottom: 0,
+  },
+  messageRoot: {
+    '&.MuiCardContent-root': {
+      paddingTop: '8px',
+    },
   },
   cardActions: {
     padding: '0 16px 8px 16px',

@@ -83,7 +83,7 @@ const Post = ({ post, setCurrentPostId, currentUser }) => {
       <Typography className={classes.title} gutterBottom variant="h5" component="h2">
         {post.title}
       </Typography>
-      <CardContent>
+      <CardContent className={classes.messageRoot}>
         <Typography variant="body2" color="textSecondary" component="p">
           {post.message}
         </Typography>

@@ -12,7 +12,6 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  CHECK_USERNAME,
 } from '../constants/actionTypes';
 
 // Action Creators
@@ -23,6 +22,7 @@ export const loadUser = () => async (dispatch, getState) => {
     const { data } = await api.getUserData(tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: data });
   } catch (err) {
+    console.log(err);
     dispatch(returnErrors(err.response.data, err.response.status));
     dispatch({ type: AUTH_ERROR });
   }
@@ -88,26 +88,6 @@ export const logout = () => (dispatch) => {
   try {
     dispatch({ type: LOGOUT_SUCCESS });
     dispatch(setSnackbar(true, 'success', 'Successfully logged out!'));
-  } catch (err) {
-    dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
-    dispatch(
-      setSnackbar(true, 'error', 'Oops! Something went wrong, please try again!'),
-    );
-  }
-};
-
-export const isUsernameTaken = (username) => async (dispatch) => {
-  try {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const body = JSON.stringify({ username });
-
-    const { data } = await api.isUsernameTaken(body, config);
-    dispatch({ type: CHECK_USERNAME, payload: data });
   } catch (err) {
     dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
     dispatch(

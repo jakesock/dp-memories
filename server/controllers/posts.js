@@ -24,6 +24,11 @@ export const createPost = async (req, res) => {
     if (!title || !message)
       return res.status(400).json({ msg: 'Title and message cannot be empty!' });
 
+    if (title.length > 24)
+      return res.status(400).json({ msg: 'Title too long! (Max 16 Characters)' });
+    if (message.length > 160)
+      return res.status(400).json({ msg: 'Message too long! (Max 160 Characters)' });
+
     const post = new PostMessage({
       title,
       message,

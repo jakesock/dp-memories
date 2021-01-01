@@ -50,6 +50,7 @@ const FormInput = ({
             }}
             variant="outlined"
             {...(error && { error: true, helperText: error })}
+            {...(!error && helperText ? { helperText: helperText } : null)}
             fullWidth
           />
         );
@@ -85,8 +86,8 @@ const FormInput = ({
             onChange={onChange}
             variant="outlined"
             {...(error && { error: true, helperText: error })}
+            {...(!error && helperText ? { helperText: helperText } : null)}
             fullWidth
-            {...(helperText && { helperText: helperText })}
           />
         );
     }

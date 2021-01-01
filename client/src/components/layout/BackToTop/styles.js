@@ -6,8 +6,8 @@ export default makeStyles((theme) => ({
     position: 'fixed',
     bottom: '2vh',
     backgroundColor: '#DCDCDC',
-    width: '1em',
-    height: '1em',
+    width: '2em',
+    height: '2em',
     color: 'black',
     '&:hover, &.Mui-focusVisible': {
       transition: '0.3s',
@@ -18,11 +18,9 @@ export default makeStyles((theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     backToTop: {
-      width: '50px',
-      height: '50px',
       right: '50%',
       left: '50%',
-      marginLeft: '-25px',
+      marginLeft: '-1em',
     },
   },
 }));

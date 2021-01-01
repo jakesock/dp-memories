@@ -28,6 +28,10 @@ mongoose
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 
+app.get('/', (req, res) => {
+  res.send('You found the Dinosaur Planet API!');
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`🚀 Listening on port ${PORT}!`);

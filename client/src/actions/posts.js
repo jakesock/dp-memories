@@ -20,6 +20,7 @@ export const getPosts = () => async (dispatch) => {
     const { data } = await api.fetchPosts();
     dispatch({ type: FETCH_POSTS, payload: data });
   } catch (err) {
+    console.log(err);
     dispatch(returnErrors(err.response.data, err.response.status));
     dispatch(setSnackbar(true, 'error', err.response.data));
   }
