@@ -23,8 +23,8 @@ export const loadUser = () => async (dispatch, getState) => {
     dispatch({ type: USER_LOADED, payload: data });
   } catch (err) {
     console.log(err);
-    dispatch(returnErrors(err.response.data, err.response.status));
     dispatch({ type: AUTH_ERROR });
+    dispatch(returnErrors(err.response.data, err.response.status));
   }
 };
 

@@ -9,6 +9,7 @@ import FormLoading from './layout/FormLoading/FormLoading';
 
 import { createPost, updatePost } from '../../actions/posts';
 import { clearErrors } from '../../actions/error';
+import { setSnackbar } from '../../actions/snackbar';
 
 import usePrevious from '../../hooks/usePrevious';
 import useStyles from './styles';
@@ -123,13 +124,41 @@ const PostForm = ({ setForm, currentPostId, setCurrentPostId }) => {
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
+      if (validateFile(file)) {
+        const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPostData({ ...postData, selectedFile: reader.result });
-        setPreviewImage(reader.result);
-      };
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setPostData({ ...postData, selectedFile: reader.result });
+          setPreviewImage(reader.result);
+        };
+      }
+    }
+  };
+
+  const validateFile = (file) => {
+    const allowedFileTypes = ['image/gif', 'image/jpeg', 'image/png'];
+    const fileType = file.type;
+    const fileSize = file.size;
+
+    if (!allowedFileTypes.includes(fileType)) {
+      dispatch(
+        setSnackbar(
+          true,
+          'error',
+          'Invalid file! Valid file types include .jpeg, .png, and .gif!',
+        ),
+      );
+
+      return false;
+    } else if (fileSize > 30000000) {
+      dispatch(
+        setSnackbar(true, 'error', 'File too large! Max image size is 30MB!'),
+      );
+
+      return false;
+    } else {
+      return true;
     }
   };
 
