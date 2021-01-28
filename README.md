@@ -1,5 +1,7 @@
 # DINOSAUR PLANET MEMORIES
 
+Site is live on Netlify [**here**](https://dinosaurplanet.netlify.app/)!
+
 ## About
 
 - This is a social media app for my friends!
